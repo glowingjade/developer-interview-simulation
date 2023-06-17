@@ -1,5 +1,4 @@
 import { useForm } from 'react-hook-form';
-import styles from '../../styles/application.module.css';
 
 const handleSubmit = async (event) => {
   event.preventDefault();
@@ -27,29 +26,29 @@ const handleSubmit = async (event) => {
 export default function Application() {
   const { register, errors } = useForm();
   return (
-    <div className={styles.background}>
-      <form onSubmit={handleSubmit}>
-        <label>이름</label>
+    <div>
+      <form className="flex flex-col justify-items-center" onSubmit={handleSubmit}>
+        <label className="label">이름</label>
         <br />
-        <input type="text" {...register("name")} />
+        <input className="input input-bordered input-primary" type="text" {...register("name")} />
         <br />
-        <label>지원서</label>
+        <label className="label">지원서</label>
         <br />
-        <input type="file" {...register("application")} />
+        <input className="file-input" type="file" {...register("application")} />
         <br />
         <label>지원 포지션</label>
         <br />
-        <input type="text" {...register("position")} />
+        <input className="input input-bordered input-primary" type="text" {...register("position")} />
         <br />
         <label>지원 동기</label>
         <br />
-        <input type="text" {...register("motivation")} />
+        <input className="input input-bordered input-primary" type="text" {...register("motivation")} />
         <br />
         <label>기술 스택</label>
         <br />
-        <input type="text" {...register("skill")} />
+        <input className="input input-bordered input-primary" type="text" {...register("skill")} />
         <br />
-        <button type="submit">제출</button>
+        <button className="btn" type="submit">제출</button>
       </form>
     </div>
   );
