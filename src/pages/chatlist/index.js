@@ -1,11 +1,10 @@
 import { getSortedChatList, getAllChatIds } from "@/utils/chatlist";
 
 export async function getStaticProps() {
-  const chatList = getAllChatIds();
-  console.log(chatList);
+  const chatList = await getSortedChatList();
   return {
     props: {
-      chatList: JSON.parse(JSON.stringify(chatList)),
+      chatList,
     },
   };
 }
@@ -15,12 +14,8 @@ export default function ChatList({ chatList }) {
     <div>
       <h1>Chat List</h1>
       <ul>
-        {chatList.map(({ id, data }) => (
-          <li key={id}>
-            <br />
-            <small>
-            </small>
-          </li>
+        {chatList.map((chat) => (
+          <li key={chat.id}>{chat.id}</li>
         ))}
       </ul>
     </div>
