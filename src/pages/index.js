@@ -36,7 +36,9 @@ export default function Home() {
     }
   }
 
-  const handleUserTextSubmit = async () => {
+  const handleUserTextSubmit = async (evt) => {
+    evt.preventDefault()
+
     setUserText('')
     const newMessages = [...messages, {role: 'user', content: userText}]
     setMessages(newMessages)
@@ -57,13 +59,14 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="w-full flex p-2 border-t">
+        <form className="w-full flex p-2 border-t" onSubmit={handleUserTextSubmit}>
           <input type="text" placeholder="Type here" className="input input-bordered w-full mr-4" value={userText}
                  onChange={e => setUserText(e.target.value)}
           />
 
-          <button className="btn" disabled={!!messageGenerating} onClick={handleUserTextSubmit}>전송</button>
-        </div>
+          <button className="btn" type="submit" disabled={!!messageGenerating}>전송
+          </button>
+        </form>
       </main>
   )
 }
