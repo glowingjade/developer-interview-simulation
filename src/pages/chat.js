@@ -131,8 +131,14 @@ ${messages.map((v) => `${v.role === 'assistant' ? '면접관' : '면접자'}: ${
   return (
       <main className="max-w-2xl mx-auto">
         {!ended && (
-            <div className="pl-3 mb-5 text-blue-500 font-bold text-[15px]">남은
-              면접시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+            <div className="pl-3 mb-5 flex items-center">
+              <div className="text-blue-500 font-bold text-[15px]">
+                남은 면접시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+              </div>
+
+              <button className="btn btn-sm ml-4" onClick={() => {
+                setEnded(true)
+              }}>종료하기</button>
             </div>
         )}
 
