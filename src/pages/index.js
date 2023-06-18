@@ -1,22 +1,47 @@
 import {Inter} from 'next/font/google'
 import {openai} from '@/utils/openai'
-import {useEffect} from 'react'
+import {useState} from 'react'
 
 const inter = Inter({subsets: ['latin']})
 
 export default function Home() {
-  const a = async () => {
-    const chatCompletion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [{role: 'user', content: 'Hello world'}],
-    })
+  /**
+   * { role: 'user' | 'assistant', content: string }[]
+   */
+  const [messages, setMessages] = useState([
+    {role: 'assistant', content: '안녕하세요. 면접을 진행하겠습니다. 먼저 간단한 자기소개 부탁드립니다.'},
+  ])
+  const [userText, setUserText] = useState('')
+  const [messageGenerating, setMessageGenerating] = useState(false)
 
-    console.log('chat_completion', chatCompletion.data.choices[0].message.content)
+  const generateMessage = async (messages) => {
+    try {
+      setMessageGenerating(true)
+
+      const chatCompletion = await openai.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {role: 'system', content: '너는 개발자 면접을 보는 면접관이야. 면접관처럼 대화하도록 해.'},
+          ...messages,
+        ],
+      })
+
+      const message = chatCompletion.data.choices[0].message
+
+      setMessages([...messages, {role: message.role, content: message.content}])
+
+      setMessageGenerating(false)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
-  useEffect(() => {
-    a()
-  }, [])
+  const handleUserTextSubmit = async () => {
+    setUserText('')
+    const newMessages = [...messages, {role: 'user', content: userText}]
+    setMessages(newMessages)
+    await generateMessage(newMessages)
+  }
 
   return (
       <main>
@@ -25,18 +50,19 @@ export default function Home() {
         </div>
 
         <div className="pb-4">
-          <div className="chat chat-start">
-            <div className="chat-bubble">It's over Anakin, <br/>I have the high ground.</div>
-          </div>
-          <div className="chat chat-end">
-            <div className="chat-bubble">You underestimate my power!</div>
-          </div>
+          {messages.map(({role, content}, index) => (
+              <div key={index} className={`chat ${role === 'user' ? 'chat-end' : 'chat-start'}`}>
+                <div className="chat-bubble">{content}</div>
+              </div>
+          ))}
         </div>
 
         <div className="w-full flex p-2 border-t">
-          <input type="text" placeholder="Type here" className="input input-bordered w-full mr-4"/>
+          <input type="text" placeholder="Type here" className="input input-bordered w-full mr-4" value={userText}
+                 onChange={e => setUserText(e.target.value)}
+          />
 
-          <button className="btn">Button</button>
+          <button className="btn" disabled={!!messageGenerating} onClick={handleUserTextSubmit}>전송</button>
         </div>
       </main>
   )
