@@ -34,7 +34,7 @@ export default function Home() {
           <label className="mt-5">면접 시간 (분)</label>
           <input className="input input-bordered input-primary" type="number" {...register('duration')} />
 
-          <button className="mt-10 btn" type="submit">제출</button>
+          <button className="mt-10 btn" type="submit">면접 시작</button>
         </form>
       </main>
   )
